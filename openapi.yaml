@@ -6,6 +6,51 @@ info:
 servers:
   - url: http://localhost:8080/v1.0
 
+components:
+  schemas:
+    SNGSuccess:
+      type: object
+      properties:
+        info:
+          type: object
+        retcode:
+          type: integer
+      example:
+        info:
+          some: run results
+        retcode: 0
+    SNGFailure:
+      type: object
+      properties:
+        info:
+          type: string
+        retcode:
+          type: integer
+      example:
+        info:
+          some: error details
+        retcode: 1
+  responses:
+    200SNGSuccess:
+      description: Successful stress-ng run
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/SNGSuccess'
+    503SNGFailure:
+      description: Failed stress-ng run
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/SNGFailure'
+  securitySchemes:
+    sng_auth_token:
+      type: apiKey
+      name: X-Auth-Key
+      in: header
+      x-apikeyInfoFunc: api.apikey_auth
+
+
 paths:
   /health/liveness:
     get:
@@ -25,19 +70,10 @@ paths:
       operationId: api.readiness
       responses:
         200:
-          description: Successful readiness probe
-          content:
-            text/plain:
-              schema:
-                type: string
-                example: "ready"
+          $ref: '#/components/responses/200SNGSuccess'
         503:
-          description: Failed readiness probe
-          content:
-            text/plain:
-              schema:
-                type: string
-                example: "retcode: X\n{stress-ng error}"
+          $ref: '#/components/responses/503SNGFailure'
+
   /runjob:
     post:
       summary: Send stress-ng jobfile to run it
@@ -48,27 +84,14 @@ paths:
           text/plain:
             schema:
               x-body-name: jobfile # TODO move under 'requestBody' after next connexion update
-              type: string
               example: |
                   vm 1
                   timeout 1s
-
       responses:
         200:
-          description: Successful run
-          content:
-            application/json:
-              schema:
-                type: string
-                example:
-                  info: stress-ng result
-                  retcode: 0
+          $ref: '#/components/responses/200SNGSuccess'
         503:
-          description: Unsuccessful run
-          content:
-            application/json:
-              schema:
-                type: string
-                example:
-                  info: some error
-                  retcode: "!=0"
+          $ref: '#/components/responses/503SNGFailure'
+        # TODO: add 40X Unauthorized description
+      security:
+        - sng_auth_token: []
