@@ -10,7 +10,6 @@ import os
 TMPDIR = "/tmp/stress-api-jobs"
 SNG_FULLPATH = shutil.which("stress-ng")
 TOKEN = os.environ.get("SNG_TOKEN")
-PORT = int(os.environ.get("SNG_PORT", 8080))
 
 
 def _run_inline(sng_args: list):
@@ -71,9 +70,12 @@ def runjob(jobfile):
     return _response(result)
 
 
+app = connexion.FlaskApp(__name__)
+app.add_api('openapi.yaml',
+            arguments={'title': 'Stress-ng REST API'},
+            validate_responses=True)
+application = app.app
+
+# Leave this here for development purposes
 if __name__ == '__main__':
-    app = connexion.FlaskApp(__name__, port=PORT)
-    app.add_api('openapi.yaml',
-                arguments={'title': 'Stress-ng REST API'},
-                validate_responses=True)
-    app.run()
+    app.run(port=8080)

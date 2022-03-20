@@ -48,14 +48,14 @@ components:
       type: apiKey
       name: X-Auth-Key
       in: header
-      x-apikeyInfoFunc: api.apikey_auth
+      x-apikeyInfoFunc: app.apikey_auth
 
 
 paths:
   /health/liveness:
     get:
       summary: Liveness probe handle
-      operationId: api.liveness
+      operationId: app.liveness
       responses:
         200:
           description: Successful liveness
@@ -67,7 +67,7 @@ paths:
   /health/readiness:
     get:
       summary: Readiness probe handle
-      operationId: api.readiness
+      operationId: app.readiness
       responses:
         200:
           $ref: '#/components/responses/200SNGSuccess'
@@ -77,7 +77,7 @@ paths:
   /runjob:
     post:
       summary: Send stress-ng jobfile to run it
-      operationId: api.runjob
+      operationId: app.runjob
       requestBody:
         description: Stress-ng jobfile in plain text. [More examples](https://github.com/ColinIanKing/stress-ng/tree/master/example-jobs).
         content:
