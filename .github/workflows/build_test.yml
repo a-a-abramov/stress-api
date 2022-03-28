@@ -42,11 +42,11 @@ jobs:
 
       - name: Run image
         run: |
-          docker run --network host --rm -d -p 8080:80 --name sng ${{ env.IMAGE_NAME }}:latest
+          docker run --network host --rm -d --name sng ${{ env.IMAGE_NAME }}:latest
 
       - name: Check readiness
         run: |
-          curl -X 'GET' 'http://localhost:8080/v1.0/health/readiness' \
+          curl -X 'GET' 'http://localhost:80/v1.0/health/readiness' \
           -H 'accept: text/plain' \
           -H 'Content-Type: text/plain'
 
