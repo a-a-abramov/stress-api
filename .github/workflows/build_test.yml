@@ -49,7 +49,7 @@ jobs:
 
       - name: Run image
         run: |
-          docker run -d -p 80:80 --name sng ${{ env.IMAGE_NAME }}:${{ steps.meta.outputs.version }}
+          docker run -d -p 80:80 --name sng ${{ steps.meta.outputs.tags }}
 
       - name: Inspect
         run: |
