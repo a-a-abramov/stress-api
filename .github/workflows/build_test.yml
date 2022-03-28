@@ -33,9 +33,9 @@ jobs:
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Extract metadata (tags, labels) for Docker
+      - name: Extract metadata for Docker
         id: meta
-        uses: docker/metadata-action@98669ae865ea3cffbcbaa878cf57c20bbf1c6c38
+        uses: docker/metadata-action@v3
         with:
           images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
 
@@ -49,7 +49,7 @@ jobs:
 
       - name: Run image
         run: |
-          docker run -d -p 80:80 --name sng ${{ env.IMAGE_NAME }}:latest
+          docker run -d -p 80:80 --name sng ${{ env.IMAGE_NAME }}:${{ steps.meta.outputs.version }}
 
       - name: Inspect
         run: |
