@@ -42,7 +42,7 @@ jobs:
 
       - name: Run image
         run: |
-          docker run --network host --rm -d --name sng ${{ env.IMAGE_NAME }}:latest
+          docker run -d --name sng ${{ env.IMAGE_NAME }}:latest
 
       - name: Inspect
         run: |
