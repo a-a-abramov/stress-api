@@ -15,9 +15,6 @@ jobs:
       packages: write
 
     steps:
-      - name: Dump context
-        uses: crazy-max/ghaction-dump-context@v1
-  
       - name: Checkout
         uses: actions/checkout@v2
 
@@ -27,20 +24,20 @@ jobs:
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v1
 
-      - name: Log in to the Container registry
+      - name: Registry auth
         uses: docker/login-action@v1
         with:
           registry: ${{ env.REGISTRY }}
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Extract metadata for Docker
+      - name: Extract meta
         id: meta
         uses: docker/metadata-action@v3
         with:
           images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
 
-      - name: Build and export to Docker
+      - name: Build image
         uses: docker/build-push-action@v2
         with:
           context: .
@@ -48,7 +45,7 @@ jobs:
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
 
-      - name: Run image
+      - name: Run stress-api container
         run: |
           docker run -d -p 80:80 --name sng ${{ steps.meta.outputs.tags }}
 
@@ -56,13 +53,13 @@ jobs:
         run: |
           docker inspect sng
 
-      - name: Check readiness
+      - name: Test readiness
         run: |
           curl -X 'GET' 'http://localhost:80/v1.0/health/readiness' \
           -H 'accept: text/plain' \
           -H 'Content-Type: text/plain'
 
-      - name: Build and push
+      - name: Push (only on default branch)
         uses: docker/build-push-action@v2
         if: github.ref_name == github.event.repository.default_branch
         with:
