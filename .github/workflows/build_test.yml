@@ -15,6 +15,9 @@ jobs:
       packages: write
 
     steps:
+      - name: Debug:
+        run: ${{ github }}
+        
       - name: Checkout
         uses: actions/checkout@v2
 
