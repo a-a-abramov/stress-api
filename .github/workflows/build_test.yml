@@ -63,7 +63,7 @@ jobs:
 
       - name: Run stress-api container
         run: |
-          docker run -d -p 80:80 --name sng ${{ steps.meta.outputs.tags }}
+          docker run -d -p 80:80 --name sng ${{ steps.meta.outputs.tags[0] }}
 
       - name: Inspect
         run: |
