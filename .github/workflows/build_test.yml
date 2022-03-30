@@ -1,6 +1,9 @@
 name: Build, test, push
 on:
+  pull_request:
   push:
+    branches:
+      - master
 
 env:
   REGISTRY: ghcr.io
@@ -24,6 +27,10 @@ jobs:
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v1
 
+      # Leave it here for debug
+      - name: Dump context
+        uses: crazy-max/ghaction-dump-context@v1
+
       - name: Registry auth
         uses: docker/login-action@v1
         with:
@@ -36,6 +43,15 @@ jobs:
         uses: docker/metadata-action@v3
         with:
           images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
+          tags: |
+            type=ref,event=branch
+            type=ref,event=tag
+            type=ref,event=pr
+            type=schedule
+          flavor: |
+            latest=${{ github.ref_name == 'master' }}
+            prefix=
+            suffix=
 
       - name: Build image
         uses: docker/build-push-action@v2
@@ -59,9 +75,8 @@ jobs:
           -H 'accept: text/plain' \
           -H 'Content-Type: text/plain'
 
-      - name: Push (only on default branch)
+      - name: Push
         uses: docker/build-push-action@v2
-        if: github.ref_name == github.event.repository.default_branch
         with:
           context: .
           push: true
