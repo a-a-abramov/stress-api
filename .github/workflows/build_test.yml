@@ -59,6 +59,9 @@ jobs:
           -H 'accept: text/plain' \
           -H 'Content-Type: text/plain'
 
+      - name: Dump context
+        uses: crazy-max/ghaction-dump-context@v1
+
       - name: Push (only on default branch)
         uses: docker/build-push-action@v2
         if: github.ref_name == github.event.repository.default_branch
