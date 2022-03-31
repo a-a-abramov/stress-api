@@ -50,7 +50,7 @@ jobs:
             type=schedule
             type=raw,
           flavor: |
-            latest=${{ github.ref_name == 'master' }}
+            latest=true
             prefix=
             suffix=
 
