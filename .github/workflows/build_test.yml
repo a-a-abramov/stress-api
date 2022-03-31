@@ -61,6 +61,8 @@ jobs:
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
 
+      - run: echo "${{ toJSON(steps.meta.outputs.tags) }}"
+
       - name: Run stress-api container
         run: |
           docker run -d -p 80:80 --name sng ${{ steps.meta.outputs.tags[0] }}
