@@ -51,7 +51,7 @@ jobs:
             type=ref,event=pr
             type=schedule
           flavor: |
-            latest=true
+            latest=${{ github.ref_name == 'master' }}
             prefix=
             suffix=
 
