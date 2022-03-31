@@ -1,4 +1,6 @@
 name: Build, test, push
+
+# TODO create dedicated housekeeping workflow
 on:
   pull_request:
   push:
@@ -48,7 +50,6 @@ jobs:
             type=ref,event=tag
             type=ref,event=pr
             type=schedule
-            type=raw,
           flavor: |
             latest=true
             prefix=
@@ -59,20 +60,12 @@ jobs:
         with:
           context: .
           load: true
-          tags: |
-            ${{ steps.meta.outputs.tags }}
-            ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:foobar
+          tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
-
-      - run: echo "${{ toJSON(steps.meta.outputs.tags) }}"
 
       - name: Run stress-api container
         run: |
           docker run -d -p 80:80 --name sng ${{ fromJSON(steps.meta.outputs.json).tags[0] }}
-
-      - name: Inspect
-        run: |
-          docker inspect sng
 
       - name: Test readiness
         run: |
