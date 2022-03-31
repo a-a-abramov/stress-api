@@ -50,7 +50,7 @@ jobs:
             type=schedule
             type=raw,
           flavor: |
-            latest=true
+            latest=${{ github.ref_name == 'master' }}
             prefix=
             suffix=
 
@@ -68,7 +68,7 @@ jobs:
 
       - name: Run stress-api container
         run: |
-          docker run -d -p 80:80 --name sng ${{ steps.meta.outputs.tags[0] }}
+          docker run -d -p 80:80 --name sng ${{ fromJSON(steps.meta.outputs.tags).tags[0] }}
 
       - name: Inspect
         run: |
