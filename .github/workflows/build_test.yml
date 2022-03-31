@@ -58,7 +58,9 @@ jobs:
         with:
           context: .
           load: true
-          tags: ${{ steps.meta.outputs.tags }}
+          tags: |
+            ${{ steps.meta.outputs.tags }}
+            ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:foobar
           labels: ${{ steps.meta.outputs.labels }}
 
       - run: echo "${{ toJSON(steps.meta.outputs.tags) }}"
