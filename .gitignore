@@ -57,6 +57,7 @@ venv.bak/
 
 # Vagrant
 .vagrant/
+Vagrantfile
 
 # VS Code
 .vscode/
