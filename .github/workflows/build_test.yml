@@ -7,10 +7,6 @@ on:
     branches:
       - master
 
-env:
-  REGISTRY: ghcr.io
-  IMAGE_NAME: ${{ github.repository }}
-
 jobs:
   build-test-push:
     runs-on: ubuntu-latest
@@ -33,10 +29,16 @@ jobs:
       - name: Dump context
         uses: crazy-max/ghaction-dump-context@v1
 
-      - name: Registry auth
+      - name: Login to DockerHub
         uses: docker/login-action@v1
         with:
-          registry: ${{ env.REGISTRY }}
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+
+      - name: Login to ghcr.io
+        uses: docker/login-action@v1
+        with:
+          registry: ghcr.io
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
@@ -44,7 +46,9 @@ jobs:
         id: meta
         uses: docker/metadata-action@v3
         with:
-          images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
+          images: |
+            docker.io/${{ secrets.DOCKERHUB_USERNAME }}/${{ github.event.repository.name }}
+            ghcr.io/${{ github.repository }}
           tags: |
             type=ref,event=branch
             type=ref,event=tag
@@ -64,13 +68,13 @@ jobs:
           labels: ${{ steps.meta.outputs.labels }}
 
       - name: Run stress-api container
-        run: |
-          docker run -d -p 80:80 --name sng ${{ fromJSON(steps.meta.outputs.json).tags[0] }}
+        run: docker run -d -p 80:80 --name sng ${{ fromJSON(steps.meta.outputs.json).tags[0] }}
 
       - name: Test readiness
         run: |
+          sleep 3 && \
           curl -X 'GET' 'http://localhost:80/v1.0/health/readiness' \
-          -H 'accept: text/plain' \
+          -H 'Accept: text/plain' \
           -H 'Content-Type: text/plain'
 
       - name: Push
