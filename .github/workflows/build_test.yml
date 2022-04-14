@@ -71,6 +71,8 @@ jobs:
       - name: Run stress-api container
         run: docker run -d -p 80:80 --name sng ${{ steps.build.outputs.imageid }}
 
+      - run: docker inspect sng
+
       - name: Test readiness
         run: |
           curl --retry-connrefused --connect-timeout 5 --max-time 2 --retry 5 \
