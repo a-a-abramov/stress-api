@@ -73,8 +73,8 @@ jobs:
 
       - name: Test readiness
         run: |
-          sleep 6 && \
-          curl -X 'GET' 'http://localhost:80/v1.0/health/readiness' \
+          curl --retry-connrefused --connect-timeout 5 --max-time 2 --retry 5 \
+          -X 'GET' 'http://localhost:80/v1.0/health/readiness' \
           -H 'Accept: text/plain' \
           -H 'Content-Type: text/plain'
 
