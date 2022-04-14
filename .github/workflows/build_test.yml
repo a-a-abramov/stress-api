@@ -72,7 +72,7 @@ jobs:
 
       - name: Test readiness
         run: |
-          sleep 3 && \
+          sleep 6 && \
           curl -X 'GET' 'http://localhost:80/v1.0/health/readiness' \
           -H 'Accept: text/plain' \
           -H 'Content-Type: text/plain'
