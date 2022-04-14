@@ -60,6 +60,7 @@ jobs:
             suffix=
 
       - name: Build image
+        id: build
         uses: docker/build-push-action@v2
         with:
           context: .
@@ -68,12 +69,14 @@ jobs:
           labels: ${{ steps.meta.outputs.labels }}
 
       - name: Run stress-api container
-        run: docker run -d -p 80:80 --name sng ${{ fromJSON(steps.meta.outputs.json).tags[0] }}
+        run: docker run -d -p 80:80 --name sng ${{ steps.build.outputs.imageid }}
+
+      - run: docker inspect sng
 
       - name: Test readiness
         run: |
-          sleep 3 && \
-          curl -X 'GET' 'http://localhost:80/v1.0/health/readiness' \
+          curl --retry-connrefused --connect-timeout 5 --max-time 2 --retry 5 \
+          -X 'GET' 'http://localhost:80/v1.0/health/readiness' \
           -H 'Accept: text/plain' \
           -H 'Content-Type: text/plain'
 
