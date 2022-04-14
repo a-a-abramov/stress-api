@@ -24,7 +24,7 @@ CMD \
     "--cap", "setgid,setuid", \
     "--env", "PYTHONPATH=/usr/local/lib/python3.10/site-packages:/usr/lib/python3.10/site-packages", \
     "--wsgi-file", "app.py", \
-    "--callable", "application" \
+    "--callable", "application", \
     "--log-format", "[%(ctime)] %(addr) %(method) %(uri) %(msecs) msecs %(status)", \
     "--workers", "8"\
     ]
