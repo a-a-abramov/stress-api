@@ -29,6 +29,8 @@ spec:
         {{- toYaml .Values.podSecurityContext | nindent 8 }}
       containers:
         - name: {{ .Chart.Name }}
+          args:
+            {{- toYaml .Values.uwsgi | nindent 12 }}
           securityContext:
             {{- toYaml .Values.securityContext | nindent 12 }}
           image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
@@ -38,14 +40,8 @@ spec:
               containerPort: 80
               protocol: TCP
           livenessProbe:
-            httpGet:
-              path: /v1.0/health/liveness
+            tcpSocket:
               port: 80
-              httpHeaders:
-                - name: Accept
-                  value: text/plain
-                - name: Content-type
-                  value: text/plain
           readinessProbe:
             httpGet:
               path: /v1.0/health/readiness

@@ -2,6 +2,41 @@
 # This is a YAML-formatted file.
 # Declare variables to be passed into your templates.
 
+uwsgi:
+  - --master
+  - --plugin
+  - python,http
+  - --http
+  - :80
+  - --log-master
+  - --uid
+  - uwsgi
+  - --gid
+  - uwsgi
+  - --cap
+  - setgid,setuid
+  - --env
+  - PYTHONPATH=/usr/local/lib/python3.10/site-packages:/usr/lib/python3.10/site-packages
+  - --wsgi-file
+  - app.py
+  - --callable
+  - application
+  - --harakiri-verbose
+  - --no-orphans
+  - --die-on-term
+  - --log-format
+  - "[%(ctime)] %(addr) %(method) %(uri) %(msecs) msecs %(status)"
+  - --worker-reload-mercy
+  - "350"
+  - -t
+  - "350"
+  - --http-timeout
+  - "350"
+  - --reload-mercy
+  - "350"
+  - --workers
+  - "8"
+
 replicaCount: 1
 
 image:
@@ -61,7 +96,7 @@ ingress:
 
 resources:
   limits:
-    cpu: "500m"
+    cpu: "1000m"
     memory: "256Mi"
   # We usually recommend not to specify default resources and to leave this as a conscious
   # choice for the user. This also increases chances charts run on environments with little
