@@ -1,0 +1,4 @@
+vm 1
+vm-bytes 24M
+vm-keep
+timeout 300s

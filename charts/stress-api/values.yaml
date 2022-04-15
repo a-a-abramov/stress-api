@@ -1,0 +1,116 @@
+# Default values for stress-api.
+# This is a YAML-formatted file.
+# Declare variables to be passed into your templates.
+
+# MUST be set to a non-empty value!
+apiSecret: ""
+
+uwsgi:
+  - --master
+  - --plugin
+  - python,http
+  - --http
+  - :80
+  - --log-master
+  - --uid
+  - uwsgi
+  - --gid
+  - uwsgi
+  - --cap
+  - setgid,setuid
+  - --env
+  - PYTHONPATH=/usr/local/lib/python3.10/site-packages:/usr/lib/python3.10/site-packages
+  - --wsgi-file
+  - app.py
+  - --callable
+  - application
+  - --harakiri-verbose
+  - --no-orphans
+  - --die-on-term
+  - --log-format
+  - "[%(ctime)] %(addr) %(method) %(uri) %(msecs) msecs %(status)"
+  - --worker-reload-mercy
+  - "350"
+  - -t
+  - "350"
+  - --http-timeout
+  - "350"
+  - --reload-mercy
+  - "350"
+  - --workers
+  - "8"
+
+replicaCount: 1
+
+image:
+  repository: andreyabramov/stress-api
+  pullPolicy: Always
+  # Overrides the image tag whose default is the chart appVersion.
+  tag: latest
+
+imagePullSecrets: []
+nameOverride: ""
+fullnameOverride: ""
+
+serviceAccount:
+  # Specifies whether a service account should be created
+  create: false
+  # Annotations to add to the service account
+  annotations: {}
+  # The name of the service account to use.
+  # If not set and create is true, a name is generated using the fullname template
+  name: ""
+
+podAnnotations: {}
+
+podSecurityContext:
+  {}
+  # fsGroup: 2000
+
+securityContext:
+  {}
+  # capabilities:
+  #   drop:
+  #   - ALL
+  # readOnlyRootFilesystem: true
+  # runAsNonRoot: true
+  # runAsUser: 1000
+
+service:
+  type: ClusterIP
+  port: 80
+
+ingress:
+  enabled: false
+  className: ""
+  annotations:
+    {}
+    # kubernetes.io/ingress.class: nginx
+    # kubernetes.io/tls-acme: "true"
+  hosts:
+    - host: chart-example.local
+      paths:
+        - path: /
+          pathType: ImplementationSpecific
+  tls: []
+  #  - secretName: chart-example-tls
+  #    hosts:
+  #      - chart-example.local
+
+resources:
+  limits:
+    cpu: "500m"
+    memory: "256Mi"
+
+autoscaling:
+  enabled: false
+  minReplicas: 1
+  maxReplicas: 5
+  # targetCPUUtilizationPercentage: 80
+  targetMemoryUtilizationPercentage: 70
+
+nodeSelector: {}
+
+tolerations: []
+
+affinity: {}
