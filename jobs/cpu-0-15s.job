@@ -1,0 +1,3 @@
+# spawn 1 stressor per core
+cpu 0
+timeout 15s
