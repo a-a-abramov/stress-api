@@ -3,6 +3,16 @@ entries:
   stress-api:
   - apiVersion: v2
     appVersion: 1.16.0
+    created: "2022-04-27T10:45:41.214856097Z"
+    description: A Helm chart for Kubernetes
+    digest: 2a3bd06ba9e3f31de3cd88d337e1362472fbb3a64cdaa35603758f61f8dff251
+    name: stress-api
+    type: application
+    urls:
+    - https://github.com/a-a-abramov/stress-api/releases/download/stress-api-0.1.2/stress-api-0.1.2.tgz
+    version: 0.1.2
+  - apiVersion: v2
+    appVersion: 1.16.0
     created: "2022-04-15T20:37:02.815954894Z"
     description: A Helm chart for Kubernetes
     digest: b82a02ac5885dade21241ac1aa86ee84bd025868967e96e4fdccdc8e8452a2ee
@@ -21,4 +31,4 @@ entries:
     urls:
     - https://github.com/a-a-abramov/stress-api/releases/download/stress-api-0.1.0/stress-api-0.1.0.tgz
     version: 0.1.0
-generated: "2022-04-15T20:37:02.816002294Z"
+generated: "2022-04-27T10:45:41.214867897Z"
