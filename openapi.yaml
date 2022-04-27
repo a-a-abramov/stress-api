@@ -36,13 +36,13 @@ components:
       content:
         application/json:
           schema:
-            $ref: '#/components/schemas/SNGSuccess'
+            $ref: "#/components/schemas/SNGSuccess"
     503SNGFailure:
       description: Failed stress-ng run
       content:
         application/json:
           schema:
-            $ref: '#/components/schemas/SNGFailure'
+            $ref: "#/components/schemas/SNGFailure"
   securitySchemes:
     sng_auth_token:
       type: apiKey
@@ -50,29 +50,16 @@ components:
       in: header
       x-apikeyInfoFunc: app.apikey_auth
 
-
 paths:
-  /health/liveness:
-    get:
-      summary: Liveness probe handle
-      operationId: app.liveness
-      responses:
-        200:
-          description: Successful liveness
-          content:
-            text/plain:
-              schema:
-                type: string
-                example: "iamok"
   /health/readiness:
     get:
       summary: Readiness probe handle
       operationId: app.readiness
       responses:
         200:
-          $ref: '#/components/responses/200SNGSuccess'
+          $ref: "#/components/responses/200SNGSuccess"
         503:
-          $ref: '#/components/responses/503SNGFailure'
+          $ref: "#/components/responses/503SNGFailure"
 
   /runjob:
     post:
@@ -85,13 +72,13 @@ paths:
             schema:
               x-body-name: jobfile # TODO move under 'requestBody' after next connexion update
               example: |
-                  vm 1
-                  timeout 1s
+                vm 1
+                timeout 1s
       responses:
         200:
-          $ref: '#/components/responses/200SNGSuccess'
+          $ref: "#/components/responses/200SNGSuccess"
         503:
-          $ref: '#/components/responses/503SNGFailure'
+          $ref: "#/components/responses/503SNGFailure"
         # TODO: add 40X Unauthorized description
       security:
         - sng_auth_token: []

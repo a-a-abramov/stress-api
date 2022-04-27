@@ -53,10 +53,6 @@ def apikey_auth(provided_token):
     return {'uid': 0}
 
 
-def liveness():
-    return "iamok"
-
-
 def readiness():
     result = _run_inline(
         ["--vm", "1", "--vm-bytes", "4K", "--vm-ops", "1", "--timeout", "1s"])
